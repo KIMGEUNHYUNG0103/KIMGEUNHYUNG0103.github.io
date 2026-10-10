@@ -25,25 +25,19 @@ node --check assets/app.js
 node --check server.mjs
 ```
 
-## 가비아 배포
+## GitHub Pages 배포
 
-정적 파일 구성이므로 가비아 웹호스팅의 웹 루트(`www` 또는 `public_html`)에 다음을 업로드할 수 있습니다.
+정적 웹페이지는 GitHub Pages에서 서비스하고, 폼 접수 API는 견적주는남자 전용 Google Apps Script로 분리합니다.
 
-- `index.html`
-- `cctv.html`
-- `assets/`
+- Site files remain deployed through the GitHub Pages repository. The API project is deployed separately from Apps Script.
 
-희망 도메인 `www.견적주는남자.com`의 ASCII 호스트명은 `www.xn--l89ap9efxb823bcqa80c.com`입니다. 2026-09-30 DNS 조회 시 아직 등록된 레코드가 없었습니다. 실제 등록 가능 여부는 가비아 결제 직전에 다시 확인해야 합니다.
+희망 도메인 `견적주는남자.com`은 가비아 계정의 도메인 목록에서 확인했습니다. 정적 사이트는 GitHub Pages를 유지하며, 별도 가비아 웹호스팅은 필요하지 않습니다.
 
 ## 상담 DB·실시간 알림 연동 상태
 
-현재는 디자인과 전환 흐름을 검토하는 시안 모드입니다. `meta[name="lead-endpoint"]`가 비어 있을 때 신청 데이터는 해당 브라우저의 `localStorage`에만 최대 100건 저장되며 관리자에게 전송되지 않습니다. 화면에도 실제 알림·DB 연동 전임을 명시합니다.
+상담 폼은 이름과 연락처를 필수로 받고, 관심 서비스·설치 지역·문의 내용은 선택 입력으로 받습니다. 접수 API는 `assets/site-config.js`에 설정된 견적주는남자 전용 Apps Script로 연결됩니다. 접수는 견적주는남자 전용 비공개 스프레드시트에 저장되며 Telegram 알림을 보냅니다.
 
-운영 전에는 아래 중 하나의 서버 연동이 필요합니다.
-
-1. 폼 저장 API + 관리자 DB
-2. 문자 알림 공급자(SOLAPI 등) 또는 카카오 알림톡 비즈메시지 공급자
-3. 관리자 인증과 상담 상태 관리 화면
+상담 DB와 Telegram 알림 설정은 [`apps-script/README.md`](apps-script/README.md)를 참고하세요. 캡스 사이트의 Apps Script 주소·시트·봇 설정은 공유하지 않습니다.
 
 오픈카카오톡 URL은 사용자가 직접 상담방에 들어가는 링크이며, 폼 제출 내용을 오픈채팅방으로 자동 전송하는 공식 webhook은 아닙니다. 전화번호만으로 관리자에게 자동 문자 발송도 불가능하므로 문자 API 공급자 계정과 발신번호 인증이 필요합니다.
 
