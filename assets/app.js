@@ -33,7 +33,8 @@ function setFormStatus(form, message, type = "") {
 }
 
 window.addEventListener("message", (event) => {
-  if (!/^https:\/\/(script\.google\.com|script\.googleusercontent\.com|[a-z0-9-]+-script\.googleusercontent\.com)$/.test(event.origin)) return;
+  // Apps Script may serve HtmlService responses from a changing Googleusercontent
+  // origin. The dedicated response iframe and per-request nonce are the trust checks.
   if (event.source !== responseFrame.contentWindow) return;
   const result = event.data;
   if (!pendingLead || !result || result.channel !== "estimate-lead-result" || result.requestId !== pendingLead.id) return;
