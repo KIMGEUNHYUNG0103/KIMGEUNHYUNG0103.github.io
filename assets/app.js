@@ -1,5 +1,4 @@
-const STORAGE_KEY = "quote-man-leads";
-const endpoint = document.querySelector('meta[name="lead-endpoint"]')?.content?.trim();
+const endpoint = window.ESTIMATE_SITE_CONFIG?.formEndpoint?.trim() || "";
 
 export function validatePhone(value) {
   return /^01[016789]-?\d{3,4}-?\d{4}$/.test(value.replace(/\s/g, ""));
@@ -12,33 +11,58 @@ function formatPhone(value) {
   return `${digits.slice(0, 3)}-${digits.slice(3, digits.length - 4)}-${digits.slice(-4)}`;
 }
 
-function readLeads() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function storeDemoLead(lead) {
-  const leads = readLeads();
-  leads.unshift(lead);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(leads.slice(0, 100)));
-}
-
 function track(event, data = {}) {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event, ...data });
 }
 
-async function submitLead(form) {
+const responseFrame = document.createElement("iframe");
+responseFrame.name = "estimate-lead-response";
+responseFrame.title = "상담 접수 처리";
+responseFrame.hidden = true;
+document.body.append(responseFrame);
+
+let pendingLead = null;
+let pendingTimer = null;
+
+function setFormStatus(form, message, type = "") {
   const status = form.querySelector(".form-status");
+  status.className = "form-status";
+  status.textContent = message;
+  if (type) status.classList.add(type);
+}
+
+window.addEventListener("message", (event) => {
+  if (!/^https:\/\/(script\.google\.com|script\.googleusercontent\.com|[a-z0-9-]+-script\.googleusercontent\.com)$/.test(event.origin)) return;
+  if (event.source !== responseFrame.contentWindow) return;
+  const result = event.data;
+  if (!pendingLead || !result || result.channel !== "estimate-lead-result" || result.requestId !== pendingLead.id) return;
+
+  clearTimeout(pendingTimer);
+  const form = pendingLead.form;
   const submit = form.querySelector('button[type="submit"]');
+  pendingLead = null;
+  submit.disabled = false;
+  submit.textContent = form.dataset.submitLabel || "비밀 지원금 상담 신청하기";
+  if (result.ok !== true) {
+    setFormStatus(form, "접수에 실패했습니다. 입력 내용을 확인한 뒤 다시 시도해 주세요.", "error");
+    return;
+  }
+
+  form.reset();
+  track("generate_lead", { service: result.service || "", source: result.source || "" });
+  if (result.alertSent === false) {
+    setFormStatus(form, "상담 내용은 저장됐지만 운영자 알림 전송이 지연되고 있습니다. 다시 제출하지 않으셔도 됩니다.", "error");
+    return;
+  }
+  setFormStatus(form, "상담 신청이 접수되었습니다. 확인 후 연락드리겠습니다.", "success");
+});
+
+async function submitLead(form) {
   const data = new FormData(form);
   const phone = String(data.get("phone") || "");
 
-  status.className = "form-status";
-  status.textContent = "";
+  setFormStatus(form, "");
 
   if (data.get("website")) return;
   const requiredFields = [...form.querySelectorAll('[required]:not([name="privacy"])')];
@@ -47,56 +71,75 @@ async function submitLead(form) {
     return;
   }
   if (!validatePhone(phone)) {
-    status.classList.add("error");
-    status.textContent = "연락 가능한 휴대폰 번호를 확인해 주세요.";
+    setFormStatus(form, "연락 가능한 휴대폰 번호를 확인해 주세요.", "error");
     form.elements.phone.focus();
     return;
   }
   if (!data.get("privacy")) {
-    status.classList.add("error");
-    status.textContent = "상담을 위해 개인정보 수집 및 이용 동의가 필요합니다.";
+    setFormStatus(form, "상담을 위해 개인정보 수집 및 이용 동의가 필요합니다.", "error");
     form.elements.privacy.focus();
     return;
   }
 
   const lead = {
     id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-    createdAt: new Date().toISOString(),
+    submittedAt: new Date().toISOString(),
     source: location.pathname.includes("cctv") ? "cctv-landing" : "main-landing",
     service: String(data.get("service") || ""),
     location: String(data.get("location") || ""),
     name: String(data.get("name") || ""),
     phone: formatPhone(phone),
+    privacyAccepted: data.get("privacy") === "agree",
+    website: String(data.get("website") || ""),
     space: String(data.get("space") || ""),
     quantity: String(data.get("quantity") || ""),
     note: String(data.get("note") || ""),
   };
 
+  if (!endpoint) {
+    setFormStatus(form, "온라인 접수 연결을 준비 중입니다. 010-3743-8889 또는 카카오톡으로 문의해 주세요.", "error");
+    return;
+  }
+  if (pendingLead) return;
+
+  const submit = form.querySelector('button[type="submit"]');
   submit.disabled = true;
   submit.textContent = "접수 중...";
+  pendingLead = { ...lead, form };
+  setFormStatus(form, "상담 요청을 보내고 있습니다.");
 
   try {
-    if (endpoint) {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(lead),
-      });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      status.textContent = "상담 신청이 접수되었습니다. 확인 후 연락드리겠습니다.";
-    } else {
-      storeDemoLead(lead);
-      status.textContent = "시안용 접수가 완료되었습니다. 실제 알림·DB 연동은 배포 설정 단계에서 활성화됩니다.";
-    }
-    status.classList.add("success");
-    track("generate_lead", { service: lead.service, source: lead.source });
-    form.reset();
+    const transport = document.createElement("form");
+    transport.method = "POST";
+    transport.action = endpoint;
+    transport.target = responseFrame.name;
+    const fields = {
+      payload: JSON.stringify(lead),
+      website: lead.website,
+      parentOrigin: window.location.origin === "null" ? "" : window.location.origin,
+    };
+    Object.entries(fields).forEach(([name, value]) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      transport.append(input);
+    });
+    document.body.append(transport);
+    transport.submit();
+    transport.remove();
+    pendingTimer = setTimeout(() => {
+      if (!pendingLead || pendingLead.id !== lead.id) return;
+      pendingLead = null;
+      submit.disabled = false;
+      submit.textContent = form.dataset.submitLabel || "비밀 지원금 상담 신청하기";
+      setFormStatus(form, "접수 확인이 지연되고 있습니다. 중복 신청 전 전화 또는 카카오톡으로 문의해 주세요.", "error");
+    }, 25000);
   } catch {
-    status.classList.add("error");
-    status.textContent = "접수 연결이 원활하지 않습니다. 010-3743-8889 또는 카카오톡으로 문의해 주세요.";
-  } finally {
+    pendingLead = null;
     submit.disabled = false;
     submit.textContent = form.dataset.submitLabel || "비밀 지원금 상담 신청하기";
+    setFormStatus(form, "접수 연결에 문제가 있습니다. 잠시 뒤 다시 시도해 주세요.", "error");
   }
 }
 
