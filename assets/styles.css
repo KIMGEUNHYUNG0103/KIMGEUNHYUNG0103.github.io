@@ -243,6 +243,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .service-grid { display: grid; grid-template-columns: 1fr; grid-template-rows: none; }
   .service-card, .service-card.primary, .service-card.wide { grid-column: auto; min-height: 210px; padding: 22px; }
   .service-card.primary { min-height: 270px; }
+  .service-card a { position: relative; left: auto; bottom: auto; display: inline-flex; margin-top: 14px; }
   .compare-table { overflow: hidden; }
   .compare-row { min-width: 0; grid-template-columns: .76fr 1fr 1.24fr; font-size: 13px; line-height: 1.5; }
   .compare-row > * { min-width: 0; padding: 11px 7px; overflow-wrap: anywhere; }
