@@ -1,5 +1,34 @@
 const endpoint = window.ESTIMATE_SITE_CONFIG?.formEndpoint?.trim() || "";
 
+const heroSlides = [...document.querySelectorAll(".hero-slide")];
+const heroSlideButtons = [...document.querySelectorAll("[data-hero-slide]")];
+const heroRotationToggle = document.querySelector("[data-hero-rotation]");
+if (heroSlides.length && heroSlideButtons.length) {
+  let activeHeroSlide = 0;
+  let rotationPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const showHeroSlide = (index) => {
+    activeHeroSlide = (index + heroSlides.length) % heroSlides.length;
+    heroSlides.forEach((slide, slideIndex) => slide.classList.toggle("is-active", slideIndex === activeHeroSlide));
+    heroSlideButtons.forEach((button, buttonIndex) => button.setAttribute("aria-pressed", String(buttonIndex === activeHeroSlide)));
+  };
+  heroSlideButtons.forEach((button) => {
+    button.addEventListener("click", () => showHeroSlide(Number(button.dataset.heroSlide)));
+  });
+  const syncRotationToggle = () => {
+    if (!heroRotationToggle) return;
+    heroRotationToggle.setAttribute("aria-pressed", String(rotationPaused));
+    heroRotationToggle.textContent = rotationPaused ? "자동 넘김 다시 시작" : "자동 넘김 멈춤";
+  };
+  heroRotationToggle?.addEventListener("click", () => {
+    rotationPaused = !rotationPaused;
+    syncRotationToggle();
+  });
+  syncRotationToggle();
+  window.setInterval(() => {
+    if (!rotationPaused && !document.hidden) showHeroSlide(activeHeroSlide + 1);
+  }, 7000);
+}
+
 export function validatePhone(value) {
   return /^01[016789]-?\d{3,4}-?\d{4}$/.test(value.replace(/\s/g, ""));
 }
@@ -44,7 +73,7 @@ window.addEventListener("message", (event) => {
   const submit = form.querySelector('button[type="submit"]');
   pendingLead = null;
   submit.disabled = false;
-  submit.textContent = form.dataset.submitLabel || "비밀 지원금 상담 신청하기";
+  submit.textContent = form.dataset.submitLabel || "견주남 지원금 신청하기";
   if (result.ok !== true) {
     setFormStatus(form, "접수에 실패했습니다. 입력 내용을 확인한 뒤 다시 시도해 주세요.", "error");
     return;
@@ -82,10 +111,15 @@ async function submitLead(form) {
     return;
   }
 
+  const standardFields = new Set(["id", "submittedAt", "source", "service", "location", "name", "phone", "privacy", "website", "space", "quantity", "note"]);
+  const extraDetails = [...data.entries()]
+    .filter(([key, value]) => !standardFields.has(key) && String(value).trim())
+    .map(([key, value]) => `${form.querySelector(`[name="${CSS.escape(key)}"]`)?.labels?.[0]?.textContent?.replace("(선택)", "").trim() || key}: ${String(value).trim()}`);
+  const noteParts = [String(data.get("note") || "").trim(), ...extraDetails].filter(Boolean);
   const lead = {
     id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     submittedAt: new Date().toISOString(),
-    source: location.pathname.includes("cctv") ? "cctv-landing" : "main-landing",
+    source: form.dataset.source || (location.pathname.includes("cctv") ? "cctv-landing" : "main-landing"),
     service: String(data.get("service") || ""),
     location: String(data.get("location") || ""),
     name: String(data.get("name") || ""),
@@ -94,7 +128,7 @@ async function submitLead(form) {
     website: String(data.get("website") || ""),
     space: String(data.get("space") || ""),
     quantity: String(data.get("quantity") || ""),
-    note: String(data.get("note") || ""),
+    note: noteParts.join("\n"),
   };
 
   if (!endpoint) {
@@ -133,13 +167,13 @@ async function submitLead(form) {
       if (!pendingLead || pendingLead.id !== lead.id) return;
       pendingLead = null;
       submit.disabled = false;
-      submit.textContent = form.dataset.submitLabel || "비밀 지원금 상담 신청하기";
+      submit.textContent = form.dataset.submitLabel || "견주남 지원금 신청하기";
       setFormStatus(form, "접수 확인이 지연되고 있습니다. 중복 신청 전 전화 또는 카카오톡으로 문의해 주세요.", "error");
     }, 25000);
   } catch {
     pendingLead = null;
     submit.disabled = false;
-    submit.textContent = form.dataset.submitLabel || "비밀 지원금 상담 신청하기";
+    submit.textContent = form.dataset.submitLabel || "견주남 지원금 신청하기";
     setFormStatus(form, "접수 연결에 문제가 있습니다. 잠시 뒤 다시 시도해 주세요.", "error");
   }
 }
