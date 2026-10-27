@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 64" role="img" aria-labelledby="title">
-  <title id="title">오른쪽 주황 포인트의 기울어진 저울</title>
-  <g fill="none" stroke="#17345e" stroke-linecap="round" stroke-linejoin="round">
+  <title id="title">하늘색 기울어진 저울</title>
+  <g fill="none" stroke="#0284c7" stroke-linecap="round" stroke-linejoin="round">
     <path d="m12 12 55 13" stroke-width="3"/>
     <path d="M39 18v40" stroke-width="3"/>
     <path d="M12 12v19M67 25v18" stroke-width="1.8"/>
-    <path d="M12 31 3 46.6h18L12 31Z" fill="#f3f6fa" stroke-width="2.4"/>
-    <path d="M67 43 58 58.6h18L67 43Z" fill="#fff3e8" stroke="#e47722" stroke-width="2.8"/>
+    <path d="M12 31 3 46.6h18L12 31Z" fill="#e0f2fe" stroke-width="2.4"/>
+    <path d="M67 43 58 58.6h18L67 43Z" fill="#bae6fd" stroke="#0284c7" stroke-width="2.8"/>
   </g>
-  <circle cx="39" cy="18" r="3.4" fill="#17345e"/>
+  <circle cx="39" cy="18" r="3.4" fill="#0284c7"/>
 </svg>
