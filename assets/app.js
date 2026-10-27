@@ -91,10 +91,16 @@ window.addEventListener("message", (event) => {
 async function submitLead(form) {
   const data = new FormData(form);
   const phone = String(data.get("phone") || "");
+  const selectedServices = data.getAll("service").map((service) => String(service));
 
   setFormStatus(form, "");
 
   if (data.get("website")) return;
+  if (!selectedServices.length) {
+    setFormStatus(form, "필요한 서비스를 하나 이상 선택해 주세요.", "error");
+    form.querySelector('input[name="service"]')?.focus();
+    return;
+  }
   const requiredFields = [...form.querySelectorAll('[required]:not([name="privacy"])')];
   if (requiredFields.some((field) => !field.checkValidity())) {
     form.reportValidity();
@@ -120,7 +126,7 @@ async function submitLead(form) {
     id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     submittedAt: new Date().toISOString(),
     source: form.dataset.source || (location.pathname.includes("cctv") ? "cctv-landing" : "main-landing"),
-    service: String(data.get("service") || ""),
+    service: selectedServices.join(", "),
     location: String(data.get("location") || ""),
     name: String(data.get("name") || ""),
     phone: formatPhone(phone),
@@ -132,7 +138,7 @@ async function submitLead(form) {
   };
 
   if (!endpoint) {
-    setFormStatus(form, "온라인 접수 연결을 준비 중입니다. 010-3743-8889 또는 카카오톡으로 문의해 주세요.", "error");
+    setFormStatus(form, "친구 검토용 미리보기입니다. 상담 신청은 실제 접수되지 않습니다.", "error");
     return;
   }
   if (pendingLead) return;
@@ -184,6 +190,15 @@ document.querySelectorAll('input[name="phone"]').forEach((input) => {
   });
 });
 
+document.querySelectorAll('.service-choice-group input[name="service"]').forEach((input) => {
+  input.addEventListener("change", () => {
+    if (!input.checked) return;
+    input.closest(".service-choice-group")?.querySelectorAll('input[name="service"]').forEach((sibling) => {
+      if (sibling !== input) sibling.checked = false;
+    });
+  });
+});
+
 document.querySelectorAll("#consultation-form").forEach((form) => {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -195,10 +210,55 @@ document.querySelectorAll("[data-service]").forEach((trigger) => {
   trigger.addEventListener("click", () => {
     const form = document.querySelector("#consultation-form");
     if (!form) return;
-    const select = form.elements.service;
-    if (select) select.value = trigger.dataset.service;
+    const choice = [...form.querySelectorAll('input[name="service"]')].find((input) => input.value === trigger.dataset.service);
+    if (!choice) return;
+    choice.checked = true;
+    choice.closest(".service-choice-group")?.querySelectorAll('input[name="service"]').forEach((sibling) => {
+      if (sibling !== choice) sibling.checked = false;
+    });
   });
 });
+
+document.querySelectorAll("[data-activity-board]").forEach((board) => {
+  const buttons = [...board.querySelectorAll("[data-activity-filter]")];
+  const rows = [...board.querySelectorAll(".activity-row[data-activity-category]")];
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const category = button.dataset.activityFilter;
+      buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+      rows.forEach((row) => {
+        row.hidden = category !== "all" && row.dataset.activityCategory !== category;
+      });
+    });
+  });
+});
+
+const demoActivityRows = [...document.querySelectorAll(".activity-row[data-activity-category]")];
+if (demoActivityRows.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const sampleNames = ["강*서", "문*우", "배*윤", "임*진", "신*호", "백*아", "남*준", "차*은", "유*민", "안*혁", "서*연", "노*현"];
+  const startedAt = Date.now();
+  const baseMinutes = demoActivityRows.map((row) => {
+    const time = row.querySelector("[data-demo-time]")?.textContent?.trim() || "";
+    const minutes = Number(time.match(/(\d+)분/)?.[1] || 0);
+    const hours = Number(time.match(/(\d+)시간/)?.[1] || 0);
+    return hours * 60 + minutes;
+  });
+
+  window.setInterval(() => {
+    const elapsedMs = Date.now() - startedAt;
+    const nameCycle = Math.floor(elapsedMs / 8000);
+    const elapsedMinutes = Math.floor(elapsedMs / 60000);
+    demoActivityRows.forEach((row, index) => {
+      const name = row.querySelector("[data-demo-name]");
+      const time = row.querySelector("[data-demo-time]");
+      if (name) name.textContent = sampleNames[(nameCycle + index * 3) % sampleNames.length];
+      if (time) {
+        const age = baseMinutes[index] + elapsedMinutes;
+        time.textContent = age >= 60 ? `${Math.floor(age / 60)}시간${age % 60 ? ` ${age % 60}분` : ""} 전` : age > 0 ? `${age}분 전` : "방금 전";
+      }
+    });
+  }, 8000);
+}
 
 document.querySelectorAll(".faq-item button").forEach((button) => {
   button.addEventListener("click", () => {
@@ -223,3 +283,5 @@ document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
 document.querySelectorAll('a[href*="open.kakao.com"]').forEach((link) => {
   link.addEventListener("click", () => track("click_kakao", { placement: link.dataset.placement || "page" }));
 });
+
+
