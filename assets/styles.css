@@ -921,3 +921,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
  .story-marquee { overflow-x: auto; }
 }
 
+.consent { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; column-gap: 8px; line-height: 1.6; }
+.consent label { min-width: 0; word-break: keep-all; }
+.consent button { white-space: nowrap; }
