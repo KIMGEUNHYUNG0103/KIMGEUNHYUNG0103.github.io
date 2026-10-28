@@ -237,6 +237,7 @@ const demoActivityRows = [...document.querySelectorAll(".activity-row[data-activ
 if (demoActivityRows.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   const sampleNames = ["강*서", "문*우", "배*윤", "임*진", "신*호", "백*아", "남*준", "차*은", "유*민", "안*혁", "서*연", "노*현"];
   const startedAt = Date.now();
+  const refreshInterval = 30000;
   const baseMinutes = demoActivityRows.map((row) => {
     const time = row.querySelector("[data-demo-time]")?.textContent?.trim() || "";
     const minutes = Number(time.match(/(\d+)분/)?.[1] || 0);
@@ -244,20 +245,23 @@ if (demoActivityRows.length && !window.matchMedia("(prefers-reduced-motion: redu
     return hours * 60 + minutes;
   });
 
-  window.setInterval(() => {
+  const refreshDemoActivity = () => {
     const elapsedMs = Date.now() - startedAt;
-    const nameCycle = Math.floor(elapsedMs / 8000);
+    const nameCycle = Math.floor(elapsedMs / refreshInterval);
     const elapsedMinutes = Math.floor(elapsedMs / 60000);
     demoActivityRows.forEach((row, index) => {
       const name = row.querySelector("[data-demo-name]");
       const time = row.querySelector("[data-demo-time]");
-      if (name) name.textContent = sampleNames[(nameCycle + index * 3) % sampleNames.length];
+      if (name) name.textContent = sampleNames[(nameCycle + index) % sampleNames.length];
       if (time) {
         const age = baseMinutes[index] + elapsedMinutes;
         time.textContent = age >= 60 ? `${Math.floor(age / 60)}시간${age % 60 ? ` ${age % 60}분` : ""} 전` : age > 0 ? `${age}분 전` : "방금 전";
       }
     });
-  }, 8000);
+  };
+
+  refreshDemoActivity();
+  window.setInterval(refreshDemoActivity, refreshInterval);
 }
 
 document.querySelectorAll(".faq-item button").forEach((button) => {
