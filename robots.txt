@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
 Sitemap: https://www.xn--l89ap9efxb823bcqa80c.com/sitemap.xml

@@ -18,15 +18,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css?v=lower-background-preview-20261028">
+  <link rel="stylesheet" href="assets/styles.css?v=release-20261029">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"견적주는남자","url":"https://www.견적주는남자.com/","telephone":"010-3743-8889","contactPoint":{"@type":"ContactPoint","telephone":"010-3743-8889","contactType":"customer service","availableLanguage":"Korean"}}</script>
-</head>
+<script src="/assets/url-normalize.js?v=20261029"></script></head>
 <body>
   <a class="skip-link" href="#main">본문으로 이동</a>
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="index.html" aria-label="견적주는남자 홈">
-        <img class="brand-mark" src="assets/brand-mark-orange.svg?v=3" alt="" aria-hidden="true">
+        <img class="brand-mark" src="assets/brand-mark-orange.svg?v=orange-restored-20261028" alt="" aria-hidden="true">
         <span class="brand-name"><span class="brand-highlight">견</span>적<span class="brand-highlight">주</span>는<span class="brand-highlight">남</span>자</span>
       </a>
       <nav class="nav" aria-label="주요 메뉴">
@@ -115,52 +115,71 @@
     <section class="activity-preview" id="activity-preview" aria-labelledby="activity-preview-title">
       <div class="container">
         <div class="activity-preview-heading">
-          <div>
-            <p class="eyebrow">상담 진행 현황</p>
-            <h2 class="section-heading" id="activity-preview-title">신청부터 지원 안내까지,<br>진행 상황을 한눈에</h2>
-          </div>
+          <h2 id="activity-preview-title">상담부터 지원 안내까지, 한눈에 확인하세요</h2>
+          <p>인터넷 · CCTV · 보안 · 테이블오더 · POS 상담 현황</p>
         </div>
         <div class="activity-preview-grid">
-          <section class="activity-panel" aria-labelledby="payout-panel-title" data-activity-board>
+          <section class="activity-panel" aria-labelledby="application-panel-title">
             <div class="activity-panel-heading">
-              <div><span class="activity-panel-icon" aria-hidden="true">₩</span><h3 id="payout-panel-title">지원금 안내 현황</h3></div>
+              <div><span class="activity-live-dot" aria-hidden="true"></span><h3 id="application-panel-title">상담 신청 예시</h3></div>
             </div>
-            <div class="activity-filters" role="group" aria-label="지원금 예시 품목 필터">
-              <button type="button" data-activity-filter="all" aria-pressed="true">전체</button>
-              <button type="button" data-activity-filter="security" aria-pressed="false">CCTV·보안</button>
-              <button type="button" data-activity-filter="store" aria-pressed="false">매장</button>
-              <button type="button" data-activity-filter="telecom" aria-pressed="false">인터넷·TV</button>
+            <div class="activity-table" role="table" aria-label="상담 신청 현황 예시">
+              <div class="activity-row activity-row-head" role="row"><span role="columnheader">날짜·시간</span><span role="columnheader">품목</span><span role="columnheader">고객명</span><span role="columnheader">상태</span></div>
+              <div class="activity-row" role="row"><span class="activity-datetime"><span data-demo-date>10.28</span><time data-demo-time>14:32</time></span><span>CCTV</span><strong>박*민</strong><span class="activity-status application">상담 신청</span></div>
+              <div class="activity-row" role="row"><span class="activity-datetime"><span data-demo-date>10.28</span><time data-demo-time>13:48</time></span><span>인터넷</span><strong>길*영</strong><span class="activity-status application">상담 신청</span></div>
+              <div class="activity-row" role="row"><span class="activity-datetime"><span data-demo-date>10.28</span><time data-demo-time>11:06</time></span><span>POS</span><strong>유*진</strong><span class="activity-status application">상담 신청</span></div>
+              <div class="activity-row" role="row"><span class="activity-datetime"><span data-demo-date>10.27</span><time data-demo-time>18:25</time></span><span>보안</span><strong>백*희</strong><span class="activity-status application">상담 신청</span></div>
+              <div class="activity-row" role="row"><span class="activity-datetime"><span data-demo-date>10.27</span><time data-demo-time>15:14</time></span><span>테이블오더</span><strong>안*별</strong><span class="activity-status application">상담 신청</span></div>
             </div>
-            <div class="activity-table" role="table" aria-label="지원금 예시 목록" aria-live="off">
-              <div class="activity-row activity-row-head" role="row"><span role="columnheader">시간</span><span role="columnheader">품목</span><span role="columnheader">고객명</span><span role="columnheader">예시 금액</span><span role="columnheader">상태</span></div>
-              <div class="activity-row" role="row" data-activity-category="security"><span data-demo-time>18분 전</span><span><b class="activity-category security">CCTV</b></span><strong><span data-demo-name>이*현</span> 고객</strong><strong class="activity-amount">108만원</strong><span class="activity-status done">안내 완료</span></div>
-              <div class="activity-row" role="row" data-activity-category="store"><span data-demo-time>1시간 35분 전</span><span><b class="activity-category store">매장</b></span><strong><span data-demo-name>박*민</span> 고객</strong><strong class="activity-amount">84만원</strong><span class="activity-status done">안내 완료</span></div>
-              <div class="activity-row" role="row" data-activity-category="telecom"><span data-demo-time>3시간 10분 전</span><span><b class="activity-category telecom">인터넷</b></span><strong><span data-demo-name>정*윤</span> 고객</strong><strong class="activity-amount">72만원</strong><span class="activity-status done">안내 완료</span></div>
-              <div class="activity-row" role="row" data-activity-category="security"><span data-demo-time>6시간 25분 전</span><span><b class="activity-category security">보안</b></span><strong><span data-demo-name>김*준</span> 고객</strong><strong class="activity-amount">96만원</strong><span class="activity-status done">안내 완료</span></div>
-              <div class="activity-row" role="row" data-activity-category="store"><span data-demo-time>10시간 전</span><span><b class="activity-category store">테이블오더</b></span><strong><span data-demo-name>최*아</span> 고객</strong><strong class="activity-amount">115만원</strong><span class="activity-status done">안내 완료</span></div>
-            </div>
-            <p class="activity-panel-foot">조건에 따라 지원 내용이 달라집니다.</p>
           </section>
-          <section class="activity-panel" aria-labelledby="application-panel-title" data-activity-board>
+          <section class="activity-panel benefit-panel" aria-labelledby="payout-panel-title">
             <div class="activity-panel-heading">
-              <div><span class="activity-panel-icon application" aria-hidden="true">✓</span><h3 id="application-panel-title">상담 신청 현황</h3></div>
+              <div><span class="activity-live-dot" aria-hidden="true"></span><h3 id="payout-panel-title">지원금 상담 예시</h3></div>
             </div>
-            <div class="activity-filters" role="group" aria-label="상담 예시 품목 필터">
-              <button type="button" data-activity-filter="all" aria-pressed="true">전체</button>
-              <button type="button" data-activity-filter="security" aria-pressed="false">CCTV·보안</button>
-              <button type="button" data-activity-filter="store" aria-pressed="false">매장</button>
-              <button type="button" data-activity-filter="telecom" aria-pressed="false">인터넷·TV</button>
+            <div class="benefit-table benefit-examples" role="table" aria-label="날짜와 가명으로 구성한 지원금 상담 예시">
+<div class="benefit-row benefit-row-head" role="row"><span role="columnheader">날짜·시간</span><span role="columnheader">품목</span><span role="columnheader">고객명(가명)</span><span role="columnheader">예시 금액</span></div>
+<div class="benefit-row" role="row"><span role="cell" class="activity-datetime"><span>10.28</span><time datetime="2026-10-28T14:12:00+09:00">14:12</time></span><span role="cell">CCTV</span><span role="cell">김*준</span><strong role="cell">30만원</strong></div>
+<div class="benefit-row" role="row"><span role="cell" class="activity-datetime"><span>10.25</span><time datetime="2026-10-25T11:35:00+09:00">11:35</time></span><span role="cell">보안</span><span role="cell">이*영</span><strong role="cell">40만원</strong></div>
+<div class="benefit-row" role="row"><span role="cell" class="activity-datetime"><span>10.22</span><time datetime="2026-10-22T16:20:00+09:00">16:20</time></span><span role="cell">테이블오더</span><span role="cell">박*호</span><strong role="cell">25만원</strong></div>
+<div class="benefit-row" role="row"><span role="cell" class="activity-datetime"><span>10.19</span><time datetime="2026-10-19T10:45:00+09:00">10:45</time></span><span role="cell">인터넷·TV</span><span role="cell">최*은</span><strong role="cell">80만원</strong></div>
+<div class="benefit-row" role="row"><span role="cell" class="activity-datetime"><span>10.16</span><time datetime="2026-10-16T13:30:00+09:00">13:30</time></span><span role="cell">통합 솔루션</span><span role="cell">정*민</span><strong role="cell">150만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>10.13</span><time datetime="2026-10-13T17:05:00+09:00">17:05</time></span><span role="cell">CCTV</span><span role="cell">한*우</span><strong role="cell">30만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>10.10</span><time datetime="2026-10-10T09:50:00+09:00">09:50</time></span><span role="cell">보안</span><span role="cell">오*진</span><strong role="cell">40만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>10.07</span><time datetime="2026-10-07T15:25:00+09:00">15:25</time></span><span role="cell">테이블오더</span><span role="cell">장*현</span><strong role="cell">25만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>10.04</span><time datetime="2026-10-04T12:40:00+09:00">12:40</time></span><span role="cell">인터넷·TV</span><span role="cell">유*서</span><strong role="cell">80만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>10.01</span><time datetime="2026-10-01T18:10:00+09:00">18:10</time></span><span role="cell">통합 솔루션</span><span role="cell">임*수</span><strong role="cell">150만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.28</span><time datetime="2026-09-28T14:12:00+09:00">14:12</time></span><span role="cell">CCTV</span><span role="cell">김*준</span><strong role="cell">30만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.25</span><time datetime="2026-09-25T11:35:00+09:00">11:35</time></span><span role="cell">보안</span><span role="cell">이*영</span><strong role="cell">40만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.22</span><time datetime="2026-09-22T16:20:00+09:00">16:20</time></span><span role="cell">테이블오더</span><span role="cell">박*호</span><strong role="cell">25만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.19</span><time datetime="2026-09-19T10:45:00+09:00">10:45</time></span><span role="cell">인터넷·TV</span><span role="cell">최*은</span><strong role="cell">80만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.16</span><time datetime="2026-09-16T13:30:00+09:00">13:30</time></span><span role="cell">통합 솔루션</span><span role="cell">정*민</span><strong role="cell">150만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.13</span><time datetime="2026-09-13T17:05:00+09:00">17:05</time></span><span role="cell">CCTV</span><span role="cell">한*우</span><strong role="cell">30만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.10</span><time datetime="2026-09-10T09:50:00+09:00">09:50</time></span><span role="cell">보안</span><span role="cell">오*진</span><strong role="cell">40만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.07</span><time datetime="2026-09-07T15:25:00+09:00">15:25</time></span><span role="cell">테이블오더</span><span role="cell">장*현</span><strong role="cell">25만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.04</span><time datetime="2026-09-04T12:40:00+09:00">12:40</time></span><span role="cell">인터넷·TV</span><span role="cell">유*서</span><strong role="cell">80만원</strong></div>
+<div class="benefit-row" role="row" hidden><span role="cell" class="activity-datetime"><span>09.01</span><time datetime="2026-09-01T18:10:00+09:00">18:10</time></span><span role="cell">통합 솔루션</span><span role="cell">임*수</span><strong role="cell">150만원</strong></div>
             </div>
-            <div class="activity-table" role="table" aria-label="상담 신청 예시 목록" aria-live="off">
-              <div class="activity-row activity-row-head application" role="row"><span role="columnheader">시간</span><span role="columnheader">품목</span><span role="columnheader">고객명</span><span role="columnheader">진행 상태</span></div>
-              <div class="activity-row application" role="row" data-activity-category="store"><span data-demo-time>32분 전</span><span><b class="activity-category store">매장</b></span><strong><span data-demo-name>오*진</span> 고객</strong><span class="activity-status done">접수 확인</span></div>
-              <div class="activity-row application" role="row" data-activity-category="security"><span data-demo-time>2시간 5분 전</span><span><b class="activity-category security">CCTV</b></span><strong><span data-demo-name>한*서</span> 고객</strong><span class="activity-status review">조건 비교 중</span></div>
-              <div class="activity-row application" role="row" data-activity-category="telecom"><span data-demo-time>4시간 40분 전</span><span><b class="activity-category telecom">인터넷</b></span><strong><span data-demo-name>윤*호</span> 고객</strong><span class="activity-status booked">상담 예정</span></div>
-              <div class="activity-row application" role="row" data-activity-category="security"><span data-demo-time>8시간 15분 전</span><span><b class="activity-category security">보안</b></span><strong><span data-demo-name>조*연</span> 고객</strong><span class="activity-status done">접수 확인</span></div>
-              <div class="activity-row application" role="row" data-activity-category="store"><span data-demo-time>12시간 전</span><span><b class="activity-category store">POS</b></span><strong><span data-demo-name>문*혁</span> 고객</strong><span class="activity-status booked">상담 예정</span></div>
-            </div>
-            <p class="activity-panel-foot">이름은 임의로 마스킹한 예시입니다. 실제 고객 정보는 표시하지 않습니다.</p>
+            <p class="benefit-note">날짜·이름·금액은 상담 예시이며 실제 고객 내역이 아닙니다. 제공 금액은 상품 구성과 가입 조건에 따라 달라집니다.</p>
           </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-strip" id="consultation-stories" aria-label="가상 고객 후기 예시 슬라이드">
+      <p class="story-example-label">상담 내용을 이해하기 위한 가상 후기 예시입니다.</p>
+      <div class="story-marquee" data-story-marquee>
+        <div class="story-track" data-story-track>
+          <div class="story-set" data-story-set>
+            <article class="story-card"><h3>어려울 줄 알았는데<br>생각보다 간단했어요</h3><p>인터넷 약정이 끝나서 알아봤는데, 지금 쓰는 요금부터 같이 봐주셨어요. TV까지 한 번에 물어볼 수 있어서 편했어요.</p><footer>김*민 <span>인터넷 + TV</span></footer></article>
+            <article class="story-card"><h3>CCTV와 보안은<br>지원금이 없는 줄 알았어요</h3><p>인터넷만 혜택이 있는 줄 알았는데 CCTV와 보안도 조건에 따라 지원이 가능한지 알아볼 수 있더라고요. 매장 조건부터 물어보길 잘했어요.</p><footer>이*준 <span>CCTV + 보안</span></footer></article>
+            <article class="story-card"><h3>보안도 3년 약정이 끝나면<br>비교해 볼 수 있더라고요</h3><p>한번 가입하면 계속 쓰는 줄 알았어요. 인터넷처럼 약정이 끝날 때 다른 조건도 알아볼 수 있다니, 남은 기간부터 확인해 봤네요.</p><footer>박*희 <span>보안</span></footer></article>
+            <article class="story-card"><h3>우리 매장에 필요한 게<br>뭔지부터 알게 됐어요</h3><p>테이블오더 알아보면서 궁금한 게 많았는데 편하게 물어봤어요. 테이블 수와 주문 방식부터 정리하니 비교가 수월했어요.</p><footer>최*영 <span>테이블오더</span></footer></article>
+            <article class="story-card"><h3>오픈 준비로 바빴는데<br>한곳에 물어보니 편하네요</h3><p>POS랑 인터넷을 따로 알아보려니 정신이 없었어요. 필요한 것들을 같이 이야기할 수 있어서 준비할 목록이 정리됐어요.</p><footer>정*호 <span>POS + 인터넷</span></footer></article>
+            <article class="story-card"><h3>견적서만 봐서는<br>뭐가 다른지 몰랐거든요</h3><p>받아둔 견적이 몇 개 있었는데 조건이 조금씩 다르더라고요. 월 요금과 약정 기간을 같이 보니 차이가 보였어요.</p><footer>윤*서 <span>인터넷 + TV</span></footer></article>
+            <article class="story-card"><h3>출입구부터 주차장까지<br>같이 이야기해 봤어요</h3><p>건물 CCTV를 바꿀 때가 돼서 문의했어요. 평소 잘 안 보이던 곳까지 설명드리고 필요한 구성을 상담받았어요.</p><footer>한*진 <span>CCTV + 보안</span></footer></article>
+            <article class="story-card"><h3>모르는 게 많아도<br>물어보기 부담 없었어요</h3><p>POS와 테이블오더 연결이 궁금했어요. 지금 매장에서 어떻게 주문받는지부터 물어봐 주셔서 설명하기 편했네요.</p><footer>오*은 <span>테이블오더 + POS</span></footer></article>
+          </div>
+          <div class="story-set" data-story-set-copy aria-hidden="true"></div>
         </div>
       </div>
     </section>
@@ -177,7 +196,7 @@
         <div class="space-card-grid">
           <a class="space-card" href="home.html">
             <div class="space-card-media">
-              <img src="assets/images/space-home.png" alt="나무와 돌로 마감한 단독주택 외관" loading="lazy" decoding="async">
+              <img src="assets/images/space-apartment-entry.png" alt="디지털 도어록이 설치된 깔끔한 아파트 현관" loading="lazy" decoding="async">
               <span class="space-card-index">01 / HOME</span>
             </div>
             <div class="space-card-copy">
@@ -230,29 +249,14 @@
         </div>
       </div>
     </section>
-
-    <section class="final-cta" aria-labelledby="final-title">
-      <div class="container final-inner">
-        <h2 id="final-title">필요한 서비스가 있으신가요?<br>상담 후 조건을 확인해 보세요.</h2>
-        <div class="final-actions">
-          <a class="btn btn-dark" href="#consultation-form">상담 신청하기</a>
-          <a class="btn btn-kakao" href="https://open.kakao.com/o/sb8k0KRi" target="_blank" rel="noreferrer" data-placement="final">카카오톡 상담</a>
-        </div>
-      </div>
-    </section>
-    <section class="comparison-promise" aria-label="견주남의 비교 상담 안내">
-      <div class="container">
-        <p>여러 조건을 비교하고 결정하는 시대입니다.<br><strong>놓치기 쉬운 요금과 약정 조건까지 함께 살펴드릴게요.</strong></p>
-      </div>
-    </section>
     </div>
   </main>
 
-  <footer class="site-footer">
+  <footer id="site-footer" class="site-footer">
     <div class="container footer-grid">
       <div>
-        <a class="brand footer-brand" href="index.html"><img class="brand-mark" src="assets/brand-mark-orange.svg?v=3" alt="" aria-hidden="true"><span class="brand-name"><span class="brand-highlight">견</span>적<span class="brand-highlight">주</span>는<span class="brand-highlight">남</span>자</span></a>
-        <p class="footer-note">CCTV·보안, 매장 솔루션, 인터넷·TV·전화 비교견적 상담. 취급 상품과 계약 조건은 상담 시 확인해 주세요.</p>
+        <a class="brand footer-brand" href="index.html"><img class="brand-mark" src="assets/brand-mark-orange.svg?v=orange-restored-20261028" alt="" aria-hidden="true"><span class="brand-name"><span class="brand-highlight">견</span>적<span class="brand-highlight">주</span>는<span class="brand-highlight">남</span>자</span></a>
+        <p class="footer-note">견적주는남자는 인터넷·TV, CCTV·보안, 테이블오더·POS의 서비스 비교와 상담 중개를 돕는 사이트입니다.</p>
       </div>
       <div class="footer-links">
         <a href="tel:010-3743-8889">전화 010-3743-8889</a>
@@ -260,7 +264,20 @@
         <button class="link-button" type="button" data-open-privacy>개인정보 수집 안내</button>
       </div>
     </div>
-  </footer>
+      <div class="container footer-company-info" aria-label="사업자 정보 입력 영역">
+      <div class="footer-company-heading"><strong>사업자 정보</strong></div>
+      <dl class="footer-company-grid">
+        <div><dt>상호명</dt><dd>견적주는남자</dd></div>
+        <div><dt>대표자</dt><dd>김근형</dd></div>
+        <div><dt>사업자등록번호</dt><dd>613-23-97799</dd></div>
+        <div class="footer-company-address"><dt>사업장 주소</dt><dd>경북 경산시 대평길 8, 1동 301호</dd></div>
+        <div><dt>대표번호</dt><dd><a href="tel:010-3743-8889">010-3743-8889</a></dd></div>
+        <div><dt>이메일</dt><dd><a href="mailto:oksk4453@naver.com">oksk4453@naver.com</a></dd></div>
+        <div><dt>개인정보 보호책임자</dt><dd>이경엽</dd></div><div><dt>개인정보 문의</dt><dd><a href="mailto:rudduq1991@naver.com">rudduq1991@naver.com</a></dd></div>
+        <div><dt>운영시간</dt><dd>09:00~22:00</dd></div>
+      </dl>
+      <div class="footer-policy-space" aria-label="이용약관 및 개인정보 처리방침"><a href="terms.html">이용약관</a><a href="privacy.html"><strong>개인정보 처리방침</strong></a></div>
+    </div></footer>
 
   <nav class="mobile-bar" aria-label="빠른 상담">
     <a class="call" href="tel:010-3743-8889" data-placement="mobile">전화 상담</a>
@@ -270,14 +287,14 @@
   <dialog class="dialog" id="privacy-dialog">
     <div class="dialog-inner">
       <h2>개인정보 수집 및 이용 안내</h2>
-      <dl><dt>수집 목적</dt><dd>비교견적 상담 및 상담 결과 안내</dd><dt>수집 항목</dt><dd>이름, 연락처, 선택한 서비스</dd><dt>보유 기간</dt><dd>상담 완료 후 90일 또는 동의 철회 시까지</dd></dl>
+      <dl><dt>수집 목적</dt><dd>비교견적 상담 및 상담 결과 안내</dd><dt>수집 항목</dt><dd>이름, 연락처, 선택한 서비스</dd><dt>보유 기간</dt><dd>접수일부터 90일 이내. 동의 철회 또는 처리 목적 달성으로 불필요해지면 지체 없이 삭제합니다. 법령상 보존 의무가 있는 정보는 해당 기간 동안 분리 보관합니다.</dd></dl>
       <p>동의를 거부할 수 있으나, 상담 신청이 제한될 수 있습니다.</p>
       <button class="btn btn-dark dialog-close" type="button" data-close-privacy>확인</button>
     </div>
   </dialog>
 
-  <script src="assets/site-config.js?v=20261010-1"></script>
-  <script type="module" src="assets/app.js?v=unique-demo-interval-preview-20261028"></script>
+  <script src="assets/site-config.js?v=release-20261029"></script>
+    <script type="module" src="assets/app.js?v=release-20261029"></script>
   <script>
     (() => {
       const scene = document.querySelector("[data-below-hero-scenes]");
