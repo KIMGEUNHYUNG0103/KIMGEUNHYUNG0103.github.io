@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css?v=detail-copy-20261027c">
+  <link rel="stylesheet" href="assets/styles.css?v=lower-background-preview-20261028">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"견적주는남자","url":"https://www.견적주는남자.com/","telephone":"010-3743-8889","contactPoint":{"@type":"ContactPoint","telephone":"010-3743-8889","contactType":"customer service","availableLanguage":"Korean"}}</script>
 </head>
 <body>
@@ -106,6 +106,12 @@
       </div>
     </section>
 
+    <div class="below-hero-scenes" data-below-hero-scenes>
+      <div class="below-hero-backdrop" aria-hidden="true">
+        <img class="below-hero-background is-active" data-lower-background-slide src="assets/images/hero-internet-tv.jpg" alt="" decoding="async">
+        <img class="below-hero-background" data-lower-background-slide src="assets/images/hero-cctv.jpg" alt="" decoding="async">
+        <img class="below-hero-background" data-lower-background-slide src="assets/images/hero-table-order.jpg" alt="" decoding="async">
+      </div>
     <section class="activity-preview" id="activity-preview" aria-labelledby="activity-preview-title">
       <div class="container">
         <div class="activity-preview-heading">
@@ -239,6 +245,7 @@
         <p>여러 조건을 비교하고 결정하는 시대입니다.<br><strong>놓치기 쉬운 요금과 약정 조건까지 함께 살펴드릴게요.</strong></p>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -270,15 +277,38 @@
   </dialog>
 
   <script src="assets/site-config.js?v=20261010-1"></script>
-  <script type="module" src="assets/app.js?v=local-activity-draft-20261026-b"></script>
+  <script type="module" src="assets/app.js?v=unique-demo-interval-preview-20261028"></script>
   <script>
     (() => {
+      const scene = document.querySelector("[data-below-hero-scenes]");
+      const backgrounds = [...document.querySelectorAll("[data-lower-background-slide]")];
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (scene && backgrounds.length > 1) {
+        if ("IntersectionObserver" in window) {
+          const observer = new IntersectionObserver(([entry]) => {
+            scene.classList.toggle("is-background-visible", entry.isIntersecting);
+          });
+          observer.observe(scene);
+        } else {
+          scene.classList.add("is-background-visible");
+        }
+        if (!reducedMotion) {
+          let activeBackground = 0;
+          window.setInterval(() => {
+            if (!scene.classList.contains("is-background-visible")) return;
+            backgrounds[activeBackground].classList.remove("is-active");
+            activeBackground = (activeBackground + 1) % backgrounds.length;
+            backgrounds[activeBackground].classList.add("is-active");
+          }, 7000);
+        }
+      }
+
       const sequence = document.querySelector(".hero-sequence");
       const items = [...document.querySelectorAll("[data-hero-sequence-item]")];
       if (!sequence || !items.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const mobile = window.matchMedia("(max-width: 640px)").matches;
-      const revealDelay = mobile ? 150 : 650;
-      const initialDelay = mobile ? 150 : 450;
+      const revealDelay = mobile ? 850 : 650;
+      const initialDelay = mobile ? 250 : 450;
       sequence.classList.add("is-sequencing");
       const cycle = () => {
         items.forEach((item) => item.classList.remove("is-visible"));
