@@ -74,18 +74,18 @@ window.addEventListener("message", (event) => {
   pendingLead = null;
   submit.disabled = false;
   submit.textContent = form.dataset.submitLabel || "견주남 지원금 신청하기";
-  if (result.ok !== true) {
+  if (result.ok !== true || result.alertSent !== true) {
     setFormStatus(form, "접수에 실패했습니다. 입력 내용을 확인한 뒤 다시 시도해 주세요.", "error");
     return;
   }
 
   form.reset();
   track("generate_lead", { service: result.service || "", source: result.source || "" });
-  if (result.alertSent === false) {
+  if (result.alertSent !== true) {
     setFormStatus(form, "상담 내용은 저장됐지만 운영자 알림 전송이 지연되고 있습니다. 다시 제출하지 않으셔도 됩니다.", "error");
     return;
   }
-  setFormStatus(form, "상담 신청이 접수되었습니다. 확인 후 연락드리겠습니다.", "success");
+  setFormStatus(form, "상담 신청이 완료되었습니다. 순차적으로 유선 상담드리겠습니다.", "success");
 });
 
 async function submitLead(form) {
@@ -117,11 +117,18 @@ async function submitLead(form) {
     return;
   }
 
-  const standardFields = new Set(["id", "submittedAt", "source", "service", "location", "name", "phone", "privacy", "website", "space", "quantity", "note"]);
+  const standardFields = new Set(["id", "submittedAt", "source", "service", "location", "name", "phone", "privacy", "optionalConsent", "sharingConsent", "website", "space", "quantity", "note"]);
   const extraDetails = [...data.entries()]
     .filter(([key, value]) => !standardFields.has(key) && String(value).trim())
     .map(([key, value]) => `${form.querySelector(`[name="${CSS.escape(key)}"]`)?.labels?.[0]?.textContent?.replace("(선택)", "").trim() || key}: ${String(value).trim()}`);
   const noteParts = [String(data.get("note") || "").trim(), ...extraDetails].filter(Boolean);
+  const optionalAccepted = data.get("optionalConsent") === "agree";
+  if (!optionalAccepted && [data.get("location"), data.get("quantity"), ...noteParts].some(value => String(value || "").trim())) {
+    setFormStatus(form, "추가 상담 정보를 입력하셨습니다. 선택 정보 이용에 동의하거나 해당 내용을 지운 뒤 신청해 주세요.", "error");
+    form.querySelector(".consent-options").open = true;
+    form.elements.optionalConsent.focus();
+    return;
+  }
   const lead = {
     id: crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     submittedAt: new Date().toISOString(),
@@ -131,6 +138,9 @@ async function submitLead(form) {
     name: String(data.get("name") || ""),
     phone: formatPhone(phone),
     privacyAccepted: data.get("privacy") === "agree",
+    optionalAccepted,
+    sharingAccepted: data.get("sharingConsent") === "agree",
+    consentVersion: "2026-10-29",
     website: String(data.get("website") || ""),
     space: String(data.get("space") || ""),
     quantity: String(data.get("quantity") || ""),
@@ -200,6 +210,10 @@ document.querySelectorAll('.service-choice-group input[name="service"]').forEach
 });
 
 document.querySelectorAll("#consultation-form").forEach((form) => {
+  const options = document.createElement("details");
+  options.className = "consent-options";
+  options.innerHTML = '<summary>추가 정보 이용·상담업체 연결 동의 (선택)</summary><label><input type="checkbox" name="optionalConsent" value="agree">추가 상담 정보 수집·이용에 동의합니다. (선택)</label><p>목적: 상세 견적 상담. 항목: 입력한 지역·공간·수량·상품 조건·문의 내용. 보유기간: 접수일부터 90일, 철회 시 삭제. 동의하지 않아도 기본 상담이 가능합니다.</p><label><input type="checkbox" name="sharingConsent" value="agree">최싸네트웍스에 정보 제공을 동의합니다. (선택)</label><p>제공받는 자: 최싸네트웍스. 목적: 요청한 상품의 후속 상담 및 가입·설치 연결. 항목: 이름·전화번호·관심 서비스와 추가 정보 이용에 동의한 상담 내용. 보유기간: 견적주는남자 접수일부터 90일, 철회 시 삭제. 거부 시 해당 업체 연결은 제한되지만 기본 상담은 가능합니다.</p>';
+  form.querySelector(".consent")?.after(options);
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     submitLead(form);
@@ -219,49 +233,74 @@ document.querySelectorAll("[data-service]").forEach((trigger) => {
   });
 });
 
-document.querySelectorAll("[data-activity-board]").forEach((board) => {
-  const buttons = [...board.querySelectorAll("[data-activity-filter]")];
-  const rows = [...board.querySelectorAll(".activity-row[data-activity-category]")];
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const category = button.dataset.activityFilter;
-      buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-      rows.forEach((row) => {
-        row.hidden = category !== "all" && row.dataset.activityCategory !== category;
-      });
-    });
-  });
-});
+import { activityHistory, activityCurrent } from "./activity-history.js?v=monthly-order-20261028";
 
-const demoActivityRows = [...document.querySelectorAll(".activity-row[data-activity-category]")];
-if (demoActivityRows.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  const sampleNames = ["강*서", "문*우", "배*윤", "임*진", "신*호", "백*아", "남*준", "차*은", "유*민", "안*혁", "서*연", "노*현"];
-  const startedAt = Date.now();
-  const refreshInterval = 30000;
-  const baseMinutes = demoActivityRows.map((row) => {
-    const time = row.querySelector("[data-demo-time]")?.textContent?.trim() || "";
-    const minutes = Number(time.match(/(\d+)분/)?.[1] || 0);
-    const hours = Number(time.match(/(\d+)시간/)?.[1] || 0);
-    return hours * 60 + minutes;
-  });
-
-  const refreshDemoActivity = () => {
-    const elapsedMs = Date.now() - startedAt;
-    const nameCycle = Math.floor(elapsedMs / refreshInterval);
-    const elapsedMinutes = Math.floor(elapsedMs / 60000);
-    demoActivityRows.forEach((row, index) => {
-      const name = row.querySelector("[data-demo-name]");
+const activityPanels = document.querySelectorAll(".activity-panel");
+const activityInterval = 15000;
+function refreshActivityHistory() {
+  // Shared time slots select fixed batches, so reloads and visitors use the same history.
+  const slot = Math.floor(Date.now() / activityInterval);
+  const todayInKorea = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  activityPanels.forEach((panel, panelIndex) => {
+    const batches = activityHistory[panelIndex];
+    if (!batches?.length) return;
+    const rows = [...panel.querySelectorAll(".activity-row:not(.activity-row-head)")];
+    const timeline = [...(panelIndex === 0 ? activityCurrent : []), ...batches.flat()]
+      .filter(record => Date.parse(record.at) <= Date.now())
+      .sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+    if (!timeline.length || !rows.length) return;
+    const pageCount = Math.ceil(timeline.length / rows.length);
+    const start = (slot % pageCount) * rows.length;
+    const records = timeline.slice(start, start + rows.length);
+    rows.forEach((row, index) => {
+      const record = records[index];
+      const date = row.querySelector("[data-demo-date]");
       const time = row.querySelector("[data-demo-time]");
-      if (name) name.textContent = sampleNames[(nameCycle + index) % sampleNames.length];
-      if (time) {
-        const age = baseMinutes[index] + elapsedMinutes;
-        time.textContent = age >= 60 ? `${Math.floor(age / 60)}시간${age % 60 ? ` ${age % 60}분` : ""} 전` : age > 0 ? `${age}분 전` : "방금 전";
-      }
+      if (!record || !date || !time) return;
+      row.dataset.recordId = record.id;
+      date.textContent = record.at.slice(5, 10).replace("-", ".");
+      time.dateTime = record.at;
+      time.textContent = record.at.slice(11, 16);
+      row.children[1].textContent = record.item;
+      row.querySelector("strong").textContent = record.name;
+      const status = row.querySelector(".activity-status");
+      const isPastApplication = panelIndex === 0 && record.at.slice(0, 10) < todayInKorea;
+      const displayStatus = isPastApplication ? "상담 완료" : record.status;
+      status.textContent = displayStatus;
+      status.className = `activity-status ${displayStatus === "상담 진행중" ? "in-progress" : displayStatus === "상담 대기중" ? "waiting" : displayStatus.endsWith("완료") ? "done" : "application"}`;
     });
+  });
+}
+if (activityPanels.length) {
+  const tickActivity = () => {
+    refreshActivityHistory();
+    window.setTimeout(tickActivity, activityInterval - (Date.now() % activityInterval) + 25);
   };
+  tickActivity();
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refreshActivityHistory();
+  });
+}
 
-  refreshDemoActivity();
-  window.setInterval(refreshDemoActivity, refreshInterval);
+const storySet = document.querySelector("[data-story-set]");
+const storySetCopy = document.querySelector("[data-story-set-copy]");
+const storyTrack = document.querySelector("[data-story-track]");
+if (storySet && storySetCopy && storyTrack) {
+  const cards = [...storySet.children];
+  for (let index = cards.length - 1; index > 0; index -= 1) {
+    const target = Math.floor(Math.random() * (index + 1));
+    [cards[index], cards[target]] = [cards[target], cards[index]];
+  }
+  storySet.replaceChildren(...cards);
+  storySetCopy.replaceChildren(...cards.map((card) => card.cloneNode(true)));
+
+  const setMarqueeSpeed = () => {
+    const pixelsPerSecond = window.matchMedia("(max-width: 640px)").matches ? 48 : 68;
+    const seconds = Math.max(28, Math.round(storySet.scrollWidth / pixelsPerSecond));
+    storyTrack.style.setProperty("--story-duration", `${seconds}s`);
+  };
+  setMarqueeSpeed();
+  window.addEventListener("resize", setMarqueeSpeed, { passive: true });
 }
 
 document.querySelectorAll(".faq-item button").forEach((button) => {
@@ -289,3 +328,24 @@ document.querySelectorAll('a[href*="open.kakao.com"]').forEach((link) => {
 });
 
 
+// Fixed, explicitly labeled examples: five chronological rows per shared time slot.
+const benefitTable = document.querySelector('.benefit-table');
+if (benefitTable) {
+  const rows = [...benefitTable.querySelectorAll('.benefit-row:not(.benefit-row-head)')];
+  let previousSlot = -1;
+  const renderBenefitPage = () => {
+    const slot = Math.floor(Date.now() / 15000);
+    if (slot === previousSlot || !rows.length) return;
+    previousSlot = slot;
+    const start = (slot % Math.ceil(rows.length / 5)) * 5;
+    rows.forEach((row, index) => {
+      row.hidden = index < start || index >= start + 5;
+      row.classList.toggle('benefit-page-last', index === start + 4);
+      if (!row.hidden && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        row.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 350 });
+      }
+    });
+  };
+  renderBenefitPage();
+  window.setInterval(renderBenefitPage, 1000);
+}

@@ -27,7 +27,7 @@ const pages = {
   },
   home: {
     code: "01 / HOME SECURITY", service: "CCTV·보안·테이블오더", space: "주택·가정", source: "space-home-detail",
-    image: "assets/images/space-home.png", alt: "정원과 현관이 있는 단독주택",
+    image: "assets/images/space-apartment-entry.png", alt: "깔끔한 아파트 현관",
     title: "인터넷+TV 교체하면서\n보안과 CCTV까지?", lead: "현관, 주차 공간, 마당처럼 확인하고 싶은 곳에 맞춰 설치 조건을 살펴봅니다.",
     bullets: ["현관·마당·주차장", "실내·실외 설치 환경", "휴대폰 영상 확인"],
     formTitle: "가정용 보안 상담 신청", formCopy: "이름과 연락처만 남겨도 상담할 수 있습니다.",
