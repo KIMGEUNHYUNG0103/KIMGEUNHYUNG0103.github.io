@@ -213,7 +213,7 @@ document.querySelectorAll("#consultation-form").forEach((form) => {
   const options = document.createElement("details");
   options.className = "consent-options";
   options.innerHTML = '<summary>추가 정보 이용·상담업체 연결 동의 (선택)</summary><label><input type="checkbox" name="optionalConsent" value="agree">추가 상담 정보 수집·이용에 동의합니다. (선택)</label><p>목적: 상세 견적 상담. 항목: 입력한 지역·공간·수량·상품 조건·문의 내용. 보유기간: 접수일부터 90일, 철회 시 삭제. 동의하지 않아도 기본 상담이 가능합니다.</p><label><input type="checkbox" name="sharingConsent" value="agree">최싸네트웍스에 정보 제공을 동의합니다. (선택)</label><p>제공받는 자: 최싸네트웍스. 목적: 요청한 상품의 후속 상담 및 가입·설치 연결. 항목: 이름·전화번호·관심 서비스와 추가 정보 이용에 동의한 상담 내용. 보유기간: 견적주는남자 접수일부터 90일, 철회 시 삭제. 거부 시 해당 업체 연결은 제한되지만 기본 상담은 가능합니다.</p>';
-  form.querySelector(".consent")?.after(options);
+  if (form.querySelector('[name="location"], [name="quantity"], [name="note"]')) { form.querySelector(".consent")?.after(options); }
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     submitLead(form);

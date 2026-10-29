@@ -924,3 +924,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .consent { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; column-gap: 8px; line-height: 1.6; }
 .consent label { min-width: 0; word-break: keep-all; }
 .consent button { white-space: nowrap; }
+
+/* Preview: header brand with a compact tagline. */
+.site-header .brand-name { font-size: 30px; line-height: 1.12; }
+.site-header .brand-tagline { display: block; margin-bottom: 3px; font-family: system-ui, "Malgun Gothic", sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .035em; color: #65605c; }
+@media (max-width: 760px) {
+  .site-header .brand-name { font-size: 22px; }
+  .site-header .brand-tagline { font-size: 10px; margin-bottom: 2px; letter-spacing: 0; }
+}
+@media (max-width: 380px) {
+  .site-header .brand-name { font-size: 20px; }
+  .site-header .brand-tagline { font-size: 9px; }
+}

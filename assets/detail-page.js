@@ -112,7 +112,7 @@ if (page && mount) {
           <h1 id="detail-title">${page.title.replace(/\n/g, "<br>")}</h1>
           <p class="detail-lede">${page.lead}</p>
           <ul class="detail-highlights">${highlights}</ul>
-          <div class="detail-contact"><a class="btn btn-phone" href="tel:010-3743-8889">전화 010-3743-8889</a><a class="btn btn-kakao" href="https://open.kakao.com/o/sb8k0KRi" target="_blank" rel="noreferrer">카카오톡 상담</a></div>
+          <div class="detail-contact"><a class="btn btn-phone" href="tel:1544-5288">전화 1544-5288</a><a class="btn btn-kakao" href="https://open.kakao.com/o/sb8k0KRi" target="_blank" rel="noreferrer">카카오톡 상담</a></div>
         </div>
         <form class="quote-panel detail-form" id="consultation-form" data-source="${page.source}" data-submit-label="상담 신청하기" novalidate>
           <h2>${page.formTitle}</h2><p class="panel-copy">${page.formCopy}</p>
@@ -132,7 +132,7 @@ if (page && mount) {
       </div>
     </section>
     <section class="detail-checks"><div class="container detail-check-grid"><div><p class="eyebrow">상담 전에 미리 확인해요</p><h2 class="section-heading">${page.pointsTitle}</h2><p class="section-copy">정확한 구성과 조건은 설치 환경과 이용 방식에 따라 달라질 수 있습니다. 남겨주신 내용을 바탕으로 필요한 부분부터 확인합니다.</p><a class="detail-back" href="index.html#services">전체 서비스와 공간 보기 <span aria-hidden="true">↗</span></a></div><ol>${points}</ol></div></section>
-    <section class="detail-bottom"><div class="container"><p>원하시는 방식으로 편하게 문의하세요.</p><div><a href="tel:010-3743-8889">전화 상담</a><a href="https://open.kakao.com/o/sb8k0KRi" target="_blank" rel="noreferrer">카카오톡 상담</a></div></div></section>`;
+    <section class="detail-bottom"><div class="container"><p>원하시는 방식으로 편하게 문의하세요.</p><div><a href="tel:1544-5288">전화 상담</a><a href="https://open.kakao.com/o/sb8k0KRi" target="_blank" rel="noreferrer">카카오톡 상담</a></div></div></section>`;
 }
 
 
