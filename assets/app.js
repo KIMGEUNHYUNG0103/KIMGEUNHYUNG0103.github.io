@@ -236,7 +236,18 @@ document.querySelectorAll("[data-service]").forEach((trigger) => {
 import { activityHistory, activityCurrent } from "./activity-history.js?v=monthly-order-20261028";
 
 const activityPanels = document.querySelectorAll(".activity-panel");
-const activityInterval = 15000;
+const activityInterval = 8000;
+function animateActivityWave(rows) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  rows.forEach((row, index) => {
+    row.getAnimations().forEach(animation => animation.cancel());
+    row.animate([
+      { opacity: .45, transform: 'translateY(5px)', backgroundColor: 'rgba(50,133,246,0)' },
+      { opacity: 1, transform: 'translateY(-2px)', backgroundColor: 'rgba(50,133,246,.07)', offset: .45 },
+      { opacity: 1, transform: 'translateY(0)', backgroundColor: 'rgba(50,133,246,0)' }
+    ], { duration: 650, delay: index * 85, easing: 'ease-out', fill: 'backwards' });
+  });
+}
 function refreshActivityHistory() {
   // Shared time slots select fixed batches, so reloads and visitors use the same history.
   const slot = Math.floor(Date.now() / activityInterval);
@@ -252,6 +263,7 @@ function refreshActivityHistory() {
     const pageCount = Math.ceil(timeline.length / rows.length);
     const start = (slot % pageCount) * rows.length;
     const records = timeline.slice(start, start + rows.length);
+    const changed = rows[0]?.dataset.recordId !== records[0]?.id;
     rows.forEach((row, index) => {
       const record = records[index];
       const date = row.querySelector("[data-demo-date]");
@@ -269,6 +281,7 @@ function refreshActivityHistory() {
       status.textContent = displayStatus;
       status.className = `activity-status ${displayStatus === "상담 진행중" ? "in-progress" : displayStatus === "상담 대기중" ? "waiting" : displayStatus.endsWith("완료") ? "done" : "application"}`;
     });
+    if (changed) animateActivityWave(rows);
   });
 }
 if (activityPanels.length) {
@@ -334,18 +347,20 @@ if (benefitTable) {
   const rows = [...benefitTable.querySelectorAll('.benefit-row:not(.benefit-row-head)')];
   let previousSlot = -1;
   const renderBenefitPage = () => {
-    const slot = Math.floor(Date.now() / 15000);
+    const slot = Math.floor(Date.now() / activityInterval);
     if (slot === previousSlot || !rows.length) return;
     previousSlot = slot;
     const start = (slot % Math.ceil(rows.length / 5)) * 5;
     rows.forEach((row, index) => {
       row.hidden = index < start || index >= start + 5;
       row.classList.toggle('benefit-page-last', index === start + 4);
-      if (!row.hidden && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        row.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 350 });
-      }
+
     });
+    animateActivityWave(rows.filter(row => !row.hidden));
   };
-  renderBenefitPage();
-  window.setInterval(renderBenefitPage, 1000);
+  const tickBenefits = () => {
+    renderBenefitPage();
+    window.setTimeout(tickBenefits, activityInterval - (Date.now() % activityInterval) + 25);
+  };
+  tickBenefits();
 }
