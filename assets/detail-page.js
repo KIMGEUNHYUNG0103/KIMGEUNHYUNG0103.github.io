@@ -131,7 +131,7 @@ if (page && mount) {
         </form>
       </div>
     </section>
-    <section class="detail-checks"><div class="container detail-check-grid"><div><p class="eyebrow">상담 전에 미리 확인해요</p><h2 class="section-heading">${page.pointsTitle}</h2><p class="section-copy">정확한 구성과 조건은 설치 환경과 이용 방식에 따라 달라질 수 있습니다. 남겨주신 내용을 바탕으로 필요한 부분부터 확인합니다.</p><a class="detail-back" href="index.html#services">전체 서비스와 공간 보기 <span aria-hidden="true">↗</span></a></div><ol>${points}</ol></div></section>
+    <section class="detail-checks"><div class="container detail-check-grid"><div><p class="eyebrow">상담 전에 미리 확인해요</p><h2 class="section-heading">${page.pointsTitle}</h2><p class="section-copy">정확한 구성과 조건은 설치 환경과 이용 방식에 따라 달라질 수 있습니다. 남겨주신 내용을 바탕으로 필요한 부분부터 확인합니다.</p><a class="detail-back" href="index.html#space-gallery">전체 서비스와 공간 보기 <span aria-hidden="true">↗</span></a></div><ol>${points}</ol></div></section>
     <section class="detail-bottom"><div class="container"><p>원하시는 방식으로 편하게 문의하세요.</p><div><a href="tel:1544-5288">전화 상담</a><a href="https://open.kakao.com/o/sb8k0KRi" target="_blank" rel="noreferrer">카카오톡 상담</a></div></div></section>`;
 }
 

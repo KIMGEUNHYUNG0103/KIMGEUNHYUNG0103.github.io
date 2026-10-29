@@ -26,7 +26,7 @@ if (heroSlides.length && heroSlideButtons.length) {
   syncRotationToggle();
   window.setInterval(() => {
     if (!rotationPaused && !document.hidden) showHeroSlide(activeHeroSlide + 1);
-  }, 7000);
+  }, 5000);
 }
 
 export function validatePhone(value) {

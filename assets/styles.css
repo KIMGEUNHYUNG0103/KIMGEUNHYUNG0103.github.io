@@ -284,7 +284,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .activity-status.done { background: #e7f6ed; color: #16845b; }
 .activity-preview-disclaimer { margin: 24px auto 0; color: #8b95a3; font-size: 12px; line-height: 1.6; text-align: center; }
 
-.story-strip { overflow: hidden; padding: 48px 0; background: #1e252e; }
+.story-strip { overflow: hidden; padding: 32px 0; background: #1e252e; }
 .story-marquee { overflow: hidden; width: 100%; }
 .story-track { display: flex; width: max-content; animation: story-marquee-right var(--story-duration, 42s) linear infinite; will-change: transform; }
 .story-set { display: flex; flex: 0 0 auto; gap: 18px; padding: 0 9px; }
@@ -512,7 +512,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .activity-row-head { min-height: 27px; font-size: 11px; }
   .activity-status { min-height: 31px; border-radius: 8px; padding: 0 5px; font-size: 11px; }
   .activity-preview-disclaimer { margin-top: 18px; font-size: 11px; }
-  .story-strip { padding: 28px 0; }
+  .story-strip { padding: 20px 0; }
   .story-set { gap: 12px; padding-inline: 6px; }
   .story-card { width: min(84vw, 340px); min-height: 310px; padding: 22px; border-radius: 16px; }
   .story-card h3 { font-size: 19px; }
@@ -945,4 +945,67 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 359px) {
   .site-header .brand-name { font-size: 18px; }
   .site-header .header-actions .btn { padding-inline: 6px; font-size: 11px; }
+}
+
+/* Preview: real equipment photographs in story cards. */
+.story-card { overflow: hidden; }
+.story-photo { position: relative; flex: 0 0 auto; height: 166px; margin: -26px -30px 22px; background: #e5e7e8; overflow: hidden; }
+.story-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.story-photo-contain img { object-fit: contain; padding: 12px; background: #f4f4f4; }
+.story-photo figcaption { position: absolute; bottom: 10px; left: 14px; padding: 5px 10px; border-radius: 6px; background: rgba(25,32,42,.84); color: #fff; font-size: 11px; line-height: 1.4; }
+.story-photo-credits { margin: 16px 24px 0; color: #aeb8c6; font-size: 11px; line-height: 1.7; }
+.story-photo-credits summary { cursor: pointer; }
+.story-photo-credits a { color: inherit; text-decoration: underline; }
+@media (max-width: 760px) { .story-photo { height: 150px; margin: -22px -22px 18px; } }
+
+.story-photo img[src*='pos.avif'] { object-position: center 85%; }
+.story-photo img[src*='cctv.avif'] { object-position: center 65%; }
+
+/* Preview revision: distinct current equipment, wider photographic framing. */
+.story-photo { height: 204px; }
+.story-photo img { object-position: center; }
+@media (max-width: 760px) { .story-photo { height: 180px; } }
+
+.story-photo img[src*="field-router"] { object-position: center 60%; }
+
+.story-photo:has(img[src*='field-router']) { background: #d8d3ca; }
+.story-photo img[src*='field-router'] { object-fit: contain; object-position: center; }
+.story-photo img[src*='field-wall'] { object-position: center 30%; }
+
+/* Brand equipment photographs — local preview */
+.story-photo-kt img {object-position:center 45%;}
+.story-photo-sk img {object-position:center 65%;}
+.story-photo-caps img {object-position:center 35%;}
+.story-photo-s1 img {object-position:65% center;}
+
+/* Original photographs, no generative edits. */
+.story-real-kt img{object-position:center 45%}
+.story-real-sk img{object-position:center 65%}
+.story-real-reader img{object-position:center 50%}
+.story-real-camera img{object-position:center 48%}
+.story-real-order img{object-position:center 64%}
+.story-real-pos img{object-position:38% 52%}
+
+/* Original photographs, no generative edits. */
+.story-real-kt img{object-position:center 45%}
+.story-real-sk img{object-position:center 65%}
+.story-real-reader img{object-position:center 50%}
+.story-real-camera img{object-position:center 48%}
+.story-real-order img{object-position:center 64%}
+.story-real-pos img{object-position:38% 52%}
+
+/* Keep the mobile hero photo independent from the tall consultation form. */
+@media (max-width: 640px) {
+  .hero:not(.cctv-hero) {
+    background-color: #fffdfb;
+    background-image: linear-gradient(to bottom, rgba(255,253,251,.78), rgba(255,253,251,.84) 65%, #fffdfb), url("images/hero-internet-tv.jpg");
+    background-size: 100% 440px, auto 440px;
+    background-position: center top;
+    background-repeat: no-repeat;
+  }
+}
+
+/* Fade the shared photograph into the FAQ instead of cutting it off. */
+.below-hero-scenes > .faq {
+  background: linear-gradient(to bottom, rgba(255,253,251,0) 0%, rgba(255,253,251,.94) 30%, #fffdfb 70%);
 }
