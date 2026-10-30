@@ -251,7 +251,6 @@ function animateActivityWave(rows) {
 function refreshActivityHistory() {
   // Shared time slots select fixed batches, so reloads and visitors use the same history.
   const slot = Math.floor(Date.now() / activityInterval);
-  const todayInKorea = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
   activityPanels.forEach((panel, panelIndex) => {
     const batches = activityHistory[panelIndex];
     if (!batches?.length) return;
@@ -276,10 +275,9 @@ function refreshActivityHistory() {
       row.children[1].textContent = record.item;
       row.querySelector("strong").textContent = record.name;
       const status = row.querySelector(".activity-status");
-      const isPastApplication = panelIndex === 0 && record.at.slice(0, 10) < todayInKorea;
-      const displayStatus = isPastApplication ? "상담 완료" : record.status;
+      const displayStatus = panelIndex === 0 && index < 3 ? "상담 진행 중" : record.status;
       status.textContent = displayStatus;
-      status.className = `activity-status ${displayStatus === "상담 진행중" ? "in-progress" : displayStatus === "상담 대기중" ? "waiting" : displayStatus.endsWith("완료") ? "done" : "application"}`;
+      status.className = `activity-status ${displayStatus.replace(/\s/g, "") === "상담진행중" ? "in-progress" : displayStatus === "상담 대기중" ? "waiting" : displayStatus.endsWith("완료") ? "done" : "application"}`;
     });
     if (changed) animateActivityWave(rows);
   });
