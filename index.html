@@ -165,7 +165,7 @@
       </div>
     </section>
 
-    <section class="story-strip" id="consultation-stories" aria-label="가상 고객 후기 예시 슬라이드"><p class="story-example-label">상담 내역과 후기는 이해를 돕기 위한 예시입니다.</p>
+    <section class="story-strip" id="consultation-stories" aria-label="가상 고객 후기 예시 슬라이드">
       
       <div class="story-marquee" data-story-marquee>
         <div class="story-track" data-story-track>
@@ -296,7 +296,7 @@
   </dialog>
 
   <script src="assets/site-config.js?v=release-20261029"></script>
-    <script type="module" src="assets/app.js?v=background-speed-20261029"></script>
+    <script type="module" src="assets/app.js?v=three-fixes-20261030"></script>
   <script>
     (() => {
       const scene = document.querySelector("[data-below-hero-scenes]");
@@ -326,7 +326,7 @@
       const items = [...document.querySelectorAll("[data-hero-sequence-item]")];
       if (!sequence || !items.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const mobile = window.matchMedia("(max-width: 640px)").matches;
-      const revealDelay = mobile ? 120 : 650;
+      const revealDelay = 650;
       const initialDelay = mobile ? 250 : 450;
       sequence.classList.add("is-sequencing");
       const cycle = () => {
