@@ -275,7 +275,7 @@ function refreshActivityHistory() {
       row.children[1].textContent = record.item;
       row.querySelector("strong").textContent = record.name;
       const status = row.querySelector(".activity-status");
-      const displayStatus = panelIndex === 0 && index < 3 ? "상담 진행 중" : record.status;
+      const displayStatus = panelIndex === 0 && start + index < 3 ? "상담 진행 중" : record.status;
       status.textContent = displayStatus;
       status.className = `activity-status ${displayStatus.replace(/\s/g, "") === "상담진행중" ? "in-progress" : displayStatus === "상담 대기중" ? "waiting" : displayStatus.endsWith("완료") ? "done" : "application"}`;
     });
