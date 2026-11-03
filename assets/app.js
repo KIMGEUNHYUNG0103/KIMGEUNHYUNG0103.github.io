@@ -1,3 +1,5 @@
+import { showEstimateCompletion } from "./estimate-completion.js";
+
 const endpoint = window.ESTIMATE_SITE_CONFIG?.formEndpoint?.trim() || "";
 
 const heroSlides = [...document.querySelectorAll(".hero-slide")];
@@ -85,8 +87,8 @@ window.addEventListener("message", (event) => {
     setFormStatus(form, "상담 내용은 저장됐지만 운영자 알림 전송이 지연되고 있습니다. 다시 제출하지 않으셔도 됩니다.", "error");
     return;
   }
-  setFormStatus(form, "견적신청이 완료되었습니다. 순차적으로 연락드리겠습니다", "success");
-  form.querySelector(".form-status")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  setFormStatus(form, "");
+  showEstimateCompletion(submit);
 });
 
 async function submitLead(form) {
