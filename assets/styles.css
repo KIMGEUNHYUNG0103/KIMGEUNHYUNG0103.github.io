@@ -654,19 +654,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .below-hero-background { transition: none; }
 }
 
-/* Let the desktop hero copy use the same vertical space as the consultation card. */
+/* Keep the desktop heading and support badge grouped with balanced spacing. */
 @media (min-width: 961px) {
   .hero:not(.cctv-hero) .hero-copy {
-    align-self: stretch;
+    align-self: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 28px;
     width: 100%;
-    padding-block: 12px;
+    padding-block: 0;
   }
   .hero:not(.cctv-hero) .hero-kicker { margin-bottom: 0; }
-  .hero:not(.cctv-hero) .hero-sequence { width: 100%; gap: 18px; }
+  .hero:not(.cctv-hero) .hero-sequence { width: 100%; gap: 14px; }
   .hero:not(.cctv-hero) .support-badge-featured { margin-top: 0; }
 }
 
@@ -925,6 +926,29 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .consent { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; column-gap: 8px; line-height: 1.6; }
 .consent label { min-width: 0; word-break: keep-all; }
 .consent button { white-space: nowrap; }
+
+/* Main-page preview: compact consultation spacing and a single-line CCTV heading. */
+@media (min-width: 961px) {
+  .hero:not(.cctv-hero) .hero-copy h1.hero-sequence {
+    font-size: clamp(22px, 2.2vw, 30px);
+  }
+  .hero:not(.cctv-hero) .hero-sequence-item:nth-child(2) {
+    font-size: inherit;
+    white-space: nowrap;
+  }
+}
+.hero:not(.cctv-hero) #consultation-form { padding-block: 28px; }
+.hero:not(.cctv-hero) #consultation-form .service-choices { margin-bottom: 14px; }
+.hero:not(.cctv-hero) #consultation-form .service-choice-group + .service-choice-group { margin-top: 9px; }
+.hero:not(.cctv-hero) #consultation-form .service-choice > span { min-height: 50px; }
+.hero:not(.cctv-hero) #consultation-form .field { margin-bottom: 10px; }
+.hero:not(.cctv-hero) #consultation-form .field label { margin-bottom: 6px; }
+.hero:not(.cctv-hero) #consultation-form .field input { min-height: 52px; }
+.hero:not(.cctv-hero) #consultation-form .consent { margin-bottom: 10px; }
+.hero:not(.cctv-hero) #consultation-form .consent-options { margin-block: 4px 10px; }
+@media (max-width: 640px) {
+  .hero:not(.cctv-hero) #consultation-form { padding-block: 20px; }
+}
 
 /* Preview: header brand with a compact tagline. */
 .site-header .brand-name { font-size: 30px; line-height: 1.12; }

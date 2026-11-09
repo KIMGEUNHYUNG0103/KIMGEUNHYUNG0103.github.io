@@ -240,6 +240,27 @@ import { activityHistory, activityCurrent } from "./activity-history.js?v=monthl
 
 const activityPanels = document.querySelectorAll(".activity-panel");
 const activityInterval = 8000;
+// Keep the existing example records relative to the current Korean calendar date.
+const activityKstOffset = 9 * 60 * 60 * 1000;
+function activityToday(now = Date.now()) {
+  return new Date(now + activityKstOffset).toISOString().slice(0, 10);
+}
+function currentExampleDate(at, now = Date.now()) {
+  const shift = Date.parse(`${activityToday(now)}T00:00:00+09:00`) - Date.parse('2026-10-28T00:00:00+09:00');
+  const timestamp = Math.min(Date.parse(at) + shift, now);
+  return new Date(timestamp + activityKstOffset).toISOString().slice(0, 19) + '+09:00';
+}
+function dailyProgressCount(day) {
+  // A date-seeded choice stays consistent across refreshes and visitors.
+  let seed = 2166136261;
+  for (const character of `consultation:${day}`) {
+    seed = Math.imul(seed ^ character.charCodeAt(0), 16777619);
+  }
+  seed ^= seed >>> 16;
+  seed = Math.imul(seed, 0x45d9f3b);
+  seed ^= seed >>> 16;
+  return 1 + ((seed >>> 0) % 3);
+}
 function animateActivityWave(rows) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   rows.forEach((row, index) => {
@@ -252,6 +273,9 @@ function animateActivityWave(rows) {
   });
 }
 function refreshActivityHistory() {
+  const now = Date.now();
+  const today = activityToday(now);
+  const progressCount = dailyProgressCount(today);
   // Shared time slots select fixed batches, so reloads and visitors use the same history.
   const slot = Math.floor(Date.now() / activityInterval);
   activityPanels.forEach((panel, panelIndex) => {
@@ -259,26 +283,35 @@ function refreshActivityHistory() {
     if (!batches?.length) return;
     const rows = [...panel.querySelectorAll(".activity-row:not(.activity-row-head)")];
     const timeline = [...(panelIndex === 0 ? activityCurrent : []), ...batches.flat()]
+      .map((record, index) => {
+        // The newest three example entries belong to today; older entries retain their spacing.
+        const at = panelIndex === 0 && index < 3
+          ? `2026-10-28T${['14:12:00', '13:35:00', '12:58:00'][index]}+09:00`
+          : record.at;
+        return { ...record, at: currentExampleDate(at, now) };
+      })
       .filter(record => Date.parse(record.at) <= Date.now())
       .sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
     if (!timeline.length || !rows.length) return;
     const pageCount = Math.ceil(timeline.length / rows.length);
     const start = (slot % pageCount) * rows.length;
     const records = timeline.slice(start, start + rows.length);
-    const changed = rows[0]?.dataset.recordId !== records[0]?.id;
+    const changed = rows[0]?.dataset.recordId !== `${records[0]?.id}:${records[0]?.at}`;
     rows.forEach((row, index) => {
       const record = records[index];
       const date = row.querySelector("[data-demo-date]");
       const time = row.querySelector("[data-demo-time]");
       if (!record || !date || !time) return;
-      row.dataset.recordId = record.id;
+      row.dataset.recordId = `${record.id}:${record.at}`;
       date.textContent = record.at.slice(5, 10).replace("-", ".");
       time.dateTime = record.at;
       time.textContent = record.at.slice(11, 16);
       row.children[1].textContent = record.item;
       row.querySelector("strong").textContent = record.name;
       const status = row.querySelector(".activity-status");
-      const displayStatus = panelIndex === 0 && start + index < 3 ? "상담 진행 중" : record.status;
+      const displayStatus = panelIndex === 0
+        ? (record.at.slice(0, 10) === today && start + index < progressCount ? "상담 진행 중" : "상담 완료")
+        : record.status;
       status.textContent = displayStatus;
       status.className = `activity-status ${displayStatus.replace(/\s/g, "") === "상담진행중" ? "in-progress" : displayStatus === "상담 대기중" ? "waiting" : displayStatus.endsWith("완료") ? "done" : "application"}`;
     });
@@ -346,6 +379,7 @@ document.querySelectorAll('a[href*="open.kakao.com"]').forEach((link) => {
 const benefitTable = document.querySelector('.benefit-table');
 if (benefitTable) {
   const rows = [...benefitTable.querySelectorAll('.benefit-row:not(.benefit-row-head)')];
+  const originalBenefitDates = rows.map(row => row.querySelector('time')?.dateTime);
   let previousSlot = -1;
   const renderBenefitPage = () => {
     const slot = Math.floor(Date.now() / activityInterval);
@@ -353,6 +387,13 @@ if (benefitTable) {
     previousSlot = slot;
     const start = (slot % Math.ceil(rows.length / 5)) * 5;
     rows.forEach((row, index) => {
+      const time = row.querySelector('time');
+      if (time && originalBenefitDates[index]) {
+        const at = currentExampleDate(originalBenefitDates[index]);
+        time.dateTime = at;
+        time.textContent = at.slice(11, 16);
+        row.querySelector('.activity-datetime > span').textContent = at.slice(5, 10).replace('-', '.');
+      }
       row.hidden = index < start || index >= start + 5;
       row.classList.toggle('benefit-page-last', index === start + 4);
 
@@ -364,4 +405,10 @@ if (benefitTable) {
     window.setTimeout(tickBenefits, activityInterval - (Date.now() % activityInterval) + 25);
   };
   tickBenefits();
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      previousSlot = -1;
+      renderBenefitPage();
+    }
+  });
 }
